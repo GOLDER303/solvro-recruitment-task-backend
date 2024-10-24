@@ -7,3 +7,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Cocktail {
+  id           Int     @id @default(autoincrement())
+  name         String
+  category     String
+  instructions String
+  image        String?
+}
