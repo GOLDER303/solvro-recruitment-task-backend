@@ -8,17 +8,29 @@ datasource db {
 }
 
 model Cocktail {
-  id           Int     @id @default(autoincrement())
+  id           Int                  @id @default(autoincrement())
   name         String
   category     String
   instructions String
   image        String?
+  ingredients  CocktailIngredient[]
 }
 
 model Ingredient {
-  id          Int     @id @default(autoincrement())
+  id          Int                  @id @default(autoincrement())
   name        String
   description String
   isAlcohol   Boolean
   image       String?
+  cocktails   CocktailIngredient[]
+}
+
+model CocktailIngredient {
+  cocktail     Cocktail   @relation(fields: [cocktailId], references: [id], onDelete: Cascade)
+  cocktailId   Int
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Cascade)
+  ingredientId Int
+  quantity     String
+
+  @@id([cocktailId, ingredientId])
 }
