@@ -14,3 +14,11 @@ model Cocktail {
   instructions String
   image        String?
 }
+
+model Ingredient {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String
+  isAlcohol   Boolean
+  image       String?
+}
