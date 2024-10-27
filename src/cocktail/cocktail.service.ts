@@ -7,6 +7,36 @@ import { CocktailDTO } from "./dtos/cocktail.dto";
 export class CocktailService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async getCocktailById(cocktailId: number): Promise<CocktailDTO> {
+    const cocktail = await this.prisma.cocktail.findUnique({
+      where: { id: cocktailId },
+      include: {
+        ingredients: {
+          include: {
+            ingredient: {
+              select: {
+                name: true,
+                description: true,
+                isAlcohol: true,
+                image: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const cocktailDTO: CocktailDTO = {
+      ...cocktail,
+      ingredients: cocktail.ingredients.map(({ ingredient, quantity }) => ({
+        ...ingredient,
+        quantity,
+      })),
+    };
+
+    return cocktailDTO;
+  }
+
   async createCocktail(
     cocktailCreateDTO: CocktailCreateDTO,
   ): Promise<CocktailDTO> {
