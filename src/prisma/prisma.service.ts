@@ -6,4 +6,12 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
   async onModuleInit() {
     await this.$connect();
   }
+
+  async cleanDatabase() {
+    Promise.all([
+      this.cocktail.deleteMany({}),
+      this.ingredient.deleteMany({}),
+      this.cocktailIngredient.deleteMany({}),
+    ]);
+  }
 }
