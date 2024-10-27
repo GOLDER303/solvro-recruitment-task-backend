@@ -3,11 +3,12 @@ export type CocktailDTO = {
   name: string;
   category: string;
   instructions: string;
+  image?: string;
   ingredients: {
     name: string;
     description: string;
     isAlcohol: boolean;
-    imageUrl?: string;
+    image?: string;
     quantity: string;
   }[];
 };
