@@ -2,6 +2,7 @@ import { Test } from "@nestjs/testing";
 import { CocktailModule } from "src/cocktail/cocktail.module";
 import { CocktailService } from "src/cocktail/cocktail.service";
 import { CocktailCreateDTO } from "src/cocktail/dtos/cocktail-create.dto";
+import { CocktailPatchDTO } from "src/cocktail/dtos/cocktail-patch.dto";
 import { CocktailDTO } from "src/cocktail/dtos/cocktail.dto";
 import { PrismaModule } from "src/prisma/prisma.module";
 import { PrismaService } from "src/prisma/prisma.service";
@@ -113,5 +114,68 @@ describe("Cocktail Service Integration", () => {
     ).toBe(null);
   });
 
-  it.todo("should patch (update) a cocktail");
+  it("should patch (update) a cocktail", async () => {
+    const createdCocktail = await prisma.cocktail.create({
+      data: {
+        name: "Test name 1",
+        category: "Test category 1",
+        instructions: "Test instructions 1",
+      },
+    });
+
+    const ingredient1 = await prisma.ingredient.create({
+      data: {
+        name: "Test name 1",
+        description: "Test description 1",
+        isAlcohol: true,
+      },
+    });
+
+    const ingredient2 = await prisma.ingredient.create({
+      data: {
+        name: "Test name 2",
+        description: "Test description 2",
+        isAlcohol: false,
+      },
+    });
+
+    await prisma.cocktailIngredient.create({
+      data: {
+        quantity: "1 glass",
+        cocktailId: createdCocktail.id,
+        ingredientId: ingredient1.id,
+      },
+    });
+
+    const cocktailPatchDTO: CocktailPatchDTO = {
+      name: "Patched cocktail 1",
+      category: "Patched category 1",
+      instructions: "Patched instructions 1",
+      ingredients: [{ ingredientId: ingredient2.id, quantity: "2 glasses" }],
+    };
+
+    const cocktailDTO = await cocktailService.patchCocktail(
+      createdCocktail.id,
+      cocktailPatchDTO,
+    );
+
+    const expectedDTO: CocktailDTO = {
+      id: createdCocktail.id,
+      name: "Patched cocktail 1",
+      category: "Patched category 1",
+      instructions: "Patched instructions 1",
+      image: null,
+      ingredients: [
+        {
+          name: "Test name 2",
+          description: "Test description 2",
+          isAlcohol: false,
+          quantity: "2 glasses",
+          image: null,
+        },
+      ],
+    };
+
+    expect(cocktailDTO).toEqual(expectedDTO);
+  });
 });

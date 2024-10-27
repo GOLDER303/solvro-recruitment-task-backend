@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
+import { CocktailDTO } from "src/cocktail/dtos/cocktail.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CocktailCreateDTO } from "./dtos/cocktail-create.dto";
-import { CocktailDTO } from "./dtos/cocktail.dto";
+import { CocktailPatchDTO } from "./dtos/cocktail-patch.dto";
 
 @Injectable()
 export class CocktailService {
@@ -82,5 +83,54 @@ export class CocktailService {
 
   async deleteCocktailById(cocktailId: number): Promise<void> {
     await this.prisma.cocktail.delete({ where: { id: cocktailId } });
+  }
+
+  async patchCocktail(
+    cocktailId: number,
+    cocktailPatchDTO: CocktailPatchDTO,
+  ): Promise<CocktailDTO> {
+    const { ingredients, ...cocktailUpdates } = cocktailPatchDTO;
+
+    if (ingredients) {
+      await this.prisma.cocktailIngredient.deleteMany({
+        where: { cocktailId: cocktailId },
+      });
+    }
+
+    const patchedCocktail = await this.prisma.cocktail.update({
+      where: { id: cocktailId },
+      data: {
+        ...cocktailUpdates,
+        ingredients: {
+          create: ingredients.map(({ ingredientId, quantity }) => ({
+            ingredient: { connect: { id: ingredientId } },
+            quantity,
+          })),
+        },
+      },
+      include: {
+        ingredients: {
+          include: {
+            ingredient: {
+              select: {
+                name: true,
+                description: true,
+                isAlcohol: true,
+                image: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const patchedCocktailDTO: CocktailDTO = {
+      ...patchedCocktail,
+      ingredients: patchedCocktail.ingredients.map(
+        ({ ingredient, quantity }) => ({ ...ingredient, quantity }),
+      ),
+    };
+
+    return patchedCocktailDTO;
   }
 }
