@@ -79,4 +79,8 @@ export class CocktailService {
 
     return createdCocktailDTO;
   }
+
+  async deleteCocktailById(cocktailId: number): Promise<void> {
+    await this.prisma.cocktail.delete({ where: { id: cocktailId } });
+  }
 }

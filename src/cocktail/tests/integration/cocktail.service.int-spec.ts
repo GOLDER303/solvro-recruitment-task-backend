@@ -97,6 +97,21 @@ describe("Cocktail Service Integration", () => {
     expect(cocktailDTO).toEqual(expectedDTO);
   });
 
-  it.todo("should delete a cocktail");
+  it("should delete a cocktail", async () => {
+    const createdCocktail = await prisma.cocktail.create({
+      data: {
+        name: "Test name 1",
+        category: "Test category 1",
+        instructions: "Test instructions 1",
+      },
+    });
+
+    await cocktailService.deleteCocktailById(createdCocktail.id);
+
+    expect(
+      await prisma.cocktail.findUnique({ where: { id: createdCocktail.id } }),
+    ).toBe(null);
+  });
+
   it.todo("should patch (update) a cocktail");
 });
