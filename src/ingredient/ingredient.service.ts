@@ -14,4 +14,17 @@ export class IngredientService {
       where: { id: ingredientId },
     });
   }
+
+  async createIngredient(
+    ingredientCreateDTO: IngredientCreateDTO & { image?: Express.Multer.File },
+  ): Promise<IngredientDTO> {
+    return await this.prisma.ingredient.create({
+      data: {
+        name: ingredientCreateDTO.name,
+        description: ingredientCreateDTO.description,
+        isAlcohol: ingredientCreateDTO.isAlcohol,
+        image: ingredientCreateDTO.image.filename,
+      },
+    });
+  }
 }

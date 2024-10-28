@@ -98,4 +98,40 @@ describe("Ingredient Service Integration", () => {
 
     expect(ingredientsDTOs).toEqual(expectedIngredientsDTOs);
   });
+
+  it("should create an ingredient", async () => {
+    const ingredientCreateDTO: IngredientCreateDTO & {
+      image: Express.Multer.File;
+    } = {
+      name: "Ingredient 1",
+      description: "Ingredient 1 description",
+      isAlcohol: false,
+      image: {
+        filename: "ingredient_1_image.png",
+        fieldname: "image",
+        originalname: "gin.png",
+        encoding: "7bit",
+        mimetype: "image/png",
+        size: 5000,
+        buffer: Buffer.from(""),
+        destination: "uploads/images",
+        path: "uploads/images/gin.png",
+        stream: null,
+      },
+    };
+
+    const createdIngredient =
+      await ingredientService.createIngredient(ingredientCreateDTO);
+
+    const databaseIngredient = await prisma.ingredient.findUnique({
+      where: { id: createdIngredient.id },
+    });
+
+    expect(createdIngredient).toEqual(databaseIngredient);
+    expect(createdIngredient.name).toEqual(ingredientCreateDTO.name);
+    expect(createdIngredient.description).toEqual(
+      ingredientCreateDTO.description,
+    );
+    expect(createdIngredient.isAlcohol).toEqual(ingredientCreateDTO.isAlcohol);
+  });
 });
