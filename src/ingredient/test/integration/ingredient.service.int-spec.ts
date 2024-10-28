@@ -134,4 +134,21 @@ describe("Ingredient Service Integration", () => {
     );
     expect(createdIngredient.isAlcohol).toEqual(ingredientCreateDTO.isAlcohol);
   });
+
+  it("should delete an ingredient", async () => {
+    const ingredient = await prisma.ingredient.create({
+      data: {
+        name: "Ingredient 1",
+        description: "Ingredient 1 description",
+        isAlcohol: true,
+        image: "ingredient_1_image.png",
+      },
+    });
+
+    await ingredientService.deleteIngredientById(ingredient.id);
+
+    expect(
+      await prisma.ingredient.findUnique({ where: { id: ingredient.id } }),
+    ).toBe(null);
+  });
 });

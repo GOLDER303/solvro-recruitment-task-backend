@@ -27,4 +27,8 @@ export class IngredientService {
       },
     });
   }
+
+  async deleteIngredientById(ingredientId: number) {
+    await this.prisma.ingredient.delete({ where: { id: ingredientId } });
+  }
 }
