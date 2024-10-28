@@ -105,7 +105,7 @@ describe("Ingredient Service Integration", () => {
     } = {
       name: "Ingredient 1",
       description: "Ingredient 1 description",
-      isAlcohol: false,
+      isAlcoholString: "false",
       image: {
         filename: "ingredient_1_image.png",
         fieldname: "image",
@@ -132,7 +132,9 @@ describe("Ingredient Service Integration", () => {
     expect(createdIngredient.description).toEqual(
       ingredientCreateDTO.description,
     );
-    expect(createdIngredient.isAlcohol).toEqual(ingredientCreateDTO.isAlcohol);
+    expect(createdIngredient.isAlcohol).toEqual(
+      ingredientCreateDTO.isAlcoholString === "false" ? false : true,
+    );
   });
 
   it("should delete an ingredient", async () => {
