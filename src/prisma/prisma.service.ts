@@ -8,7 +8,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
   }
 
   async cleanDatabase() {
-    Promise.all([
+    await Promise.all([
       this.cocktail.deleteMany({}),
       this.ingredient.deleteMany({}),
       this.cocktailIngredient.deleteMany({}),
