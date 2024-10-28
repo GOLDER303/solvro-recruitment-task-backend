@@ -49,6 +49,110 @@ describe("Cocktail Service Integration", () => {
     expect(createdCocktail.instructions).toEqual(databaseCocktail.instructions);
   });
 
+  it("should return all cocktails", async () => {
+    const ingredient1 = await prisma.ingredient.create({
+      data: {
+        name: "Ingredient 1",
+        description: "Ingredient 1 description",
+        isAlcohol: true,
+        image: "ingredient_1_image.png",
+      },
+    });
+
+    const ingredient2 = await prisma.ingredient.create({
+      data: {
+        name: "Ingredient 2",
+        description: "Ingredient 2 description",
+        isAlcohol: false,
+        image: "ingredient_2_image.png",
+      },
+    });
+
+    await prisma.cocktail.create({
+      data: {
+        name: "Cocktail 1",
+        category: "Cocktail",
+        instructions: "Cocktail 1 instructions",
+        image: "cocktail_1_image.png",
+        ingredients: {
+          create: [
+            {
+              ingredientId: ingredient1.id,
+              quantity: "250ml",
+            },
+          ],
+        },
+      },
+    });
+
+    await prisma.cocktail.create({
+      data: {
+        name: "Cocktail 2",
+        category: "Cocktail",
+        instructions: "Cocktail 2 instructions",
+        image: "cocktail_2_image.png",
+        ingredients: {
+          create: [
+            {
+              ingredientId: ingredient1.id,
+              quantity: "50ml",
+            },
+            {
+              ingredientId: ingredient2.id,
+              quantity: "100ml",
+            },
+          ],
+        },
+      },
+    });
+
+    const cocktailsDTOs = await cocktailService.getAllCocktails();
+
+    const expectedCocktailsDTOs: CocktailDTO[] = [
+      {
+        id: expect.any(Number),
+        name: "Cocktail 1",
+        category: "Cocktail",
+        instructions: "Cocktail 1 instructions",
+        image: "cocktail_1_image.png",
+        ingredients: [
+          {
+            name: "Ingredient 1",
+            description: "Ingredient 1 description",
+            isAlcohol: true,
+            image: "ingredient_1_image.png",
+            quantity: "250ml",
+          },
+        ],
+      },
+      {
+        id: expect.any(Number),
+        name: "Cocktail 2",
+        category: "Cocktail",
+        instructions: "Cocktail 2 instructions",
+        image: "cocktail_2_image.png",
+        ingredients: [
+          {
+            name: "Ingredient 1",
+            description: "Ingredient 1 description",
+            isAlcohol: true,
+            image: "ingredient_1_image.png",
+            quantity: "50ml",
+          },
+          {
+            name: "Ingredient 2",
+            description: "Ingredient 2 description",
+            isAlcohol: false,
+            image: "ingredient_2_image.png",
+            quantity: "100ml",
+          },
+        ],
+      },
+    ];
+
+    expect(cocktailsDTOs).toEqual(expectedCocktailsDTOs);
+  });
+
   it("should return a cocktail", async () => {
     const createdCocktail = await prisma.cocktail.create({
       data: {
