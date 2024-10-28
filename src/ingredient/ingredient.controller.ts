@@ -6,10 +6,11 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Res,
   UploadedFile,
-  UseInterceptors
+  UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Response } from "express";
@@ -51,5 +52,16 @@ export class IngredientController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async deleteIngredient(@Param("id") ingredientId: string) {
     await this.ingredientService.deleteIngredientById(+ingredientId);
+  }
+
+  @Patch(":id")
+  async patchIngredient(
+    @Param("id") ingredientId: string,
+    @Body() ingredientPatchDTO: IngredientPatchDTO,
+  ) {
+    return await this.ingredientService.patchIngredient(
+      +ingredientId,
+      ingredientPatchDTO,
+    );
   }
 }
