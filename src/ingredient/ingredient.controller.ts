@@ -1,7 +1,10 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Res,
@@ -42,5 +45,11 @@ export class IngredientController {
     res.setHeader("Location", `/ingredient/${createdIngredient.id}`);
 
     return res.status(201).send();
+  }
+
+  @Delete(":id")
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteIngredient(@Param("id") ingredientId: string) {
+    await this.ingredientService.deleteIngredientById(+ingredientId);
   }
 }
