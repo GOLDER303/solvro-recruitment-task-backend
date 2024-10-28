@@ -31,4 +31,19 @@ export class IngredientService {
   async deleteIngredientById(ingredientId: number) {
     await this.prisma.ingredient.delete({ where: { id: ingredientId } });
   }
+
+  async patchIngredient(
+    ingredientId: number,
+    ingredientPatchDTO: IngredientPatchDTO,
+  ) {
+    return await this.prisma.ingredient.update({
+      where: { id: ingredientId },
+      data: {
+        name: ingredientPatchDTO.name,
+        description: ingredientPatchDTO.description,
+        isAlcohol: ingredientPatchDTO.isAlcohol,
+        image: ingredientPatchDTO.image,
+      },
+    });
+  }
 }

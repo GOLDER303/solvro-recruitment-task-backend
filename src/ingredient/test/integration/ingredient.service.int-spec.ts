@@ -151,4 +151,36 @@ describe("Ingredient Service Integration", () => {
       await prisma.ingredient.findUnique({ where: { id: ingredient.id } }),
     ).toBe(null);
   });
+
+  it("should patch (update) an ingredient", async () => {
+    const createdIngredient = await prisma.ingredient.create({
+      data: {
+        name: "Ingredient 1",
+        description: "Ingredient 1 description",
+        isAlcohol: true,
+        image: "ingredient_1_image.png",
+      },
+    });
+
+    const ingredientPatchDTO: IngredientPatchDTO = {
+      name: "Test name 2",
+      description: "Test description 2",
+      isAlcohol: false,
+      image: "ingredient_2_image.png",
+    };
+
+    await ingredientService.patchIngredient(
+      createdIngredient.id,
+      ingredientPatchDTO,
+    );
+
+    const ingredient = await prisma.ingredient.findUnique({
+      where: { id: createdIngredient.id },
+    });
+
+    expect(ingredient).toEqual({
+      id: expect.any(Number),
+      ...ingredientPatchDTO,
+    });
+  });
 });
