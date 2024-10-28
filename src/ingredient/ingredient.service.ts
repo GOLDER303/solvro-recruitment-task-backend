@@ -22,7 +22,8 @@ export class IngredientService {
       data: {
         name: ingredientCreateDTO.name,
         description: ingredientCreateDTO.description,
-        isAlcohol: ingredientCreateDTO.isAlcohol,
+        isAlcohol:
+          ingredientCreateDTO.isAlcoholString === "true" ? true : false,
         image: ingredientCreateDTO.image.filename,
       },
     });
