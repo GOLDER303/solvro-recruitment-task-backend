@@ -8,4 +8,10 @@ export class IngredientService {
   async getAllIngredients(): Promise<IngredientDTO[]> {
     return await this.prisma.ingredient.findMany();
   }
+
+  async getIngredientById(ingredientId: number): Promise<IngredientDTO> {
+    return await this.prisma.ingredient.findUnique({
+      where: { id: ingredientId },
+    });
+  }
 }

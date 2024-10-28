@@ -73,4 +73,29 @@ describe("Ingredient Service Integration", () => {
 
     expect(ingredientsDTOs).toEqual(expectedIngredientsDTOs);
   });
+
+  it("should return an ingredient", async () => {
+    const ingredient = await prisma.ingredient.create({
+      data: {
+        name: "Ingredient 1",
+        description: "Ingredient 1 description",
+        isAlcohol: true,
+        image: "ingredient_1_image.png",
+      },
+    });
+
+    const expectedIngredientsDTOs = {
+      id: expect.any(Number),
+      name: "Ingredient 1",
+      description: "Ingredient 1 description",
+      isAlcohol: true,
+      image: "ingredient_1_image.png",
+    };
+
+    const ingredientsDTOs = await ingredientService.getIngredientById(
+      ingredient.id,
+    );
+
+    expect(ingredientsDTOs).toEqual(expectedIngredientsDTOs);
+  });
 });
