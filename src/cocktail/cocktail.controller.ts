@@ -4,15 +4,17 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Res,
-  UseInterceptors
+  UseInterceptors,
 } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Response } from "express";
 import { multerOptions } from "src/config/multer-options";
 import { CocktailService } from "./cocktail.service";
 import { CocktailCreateDTO } from "./dtos/cocktail-create.dto";
+import { CocktailPatchDTO } from "./dtos/cocktail-patch.dto";
 
 @Controller("cocktail")
 export class CocktailController {
@@ -45,5 +47,13 @@ export class CocktailController {
   @Delete(":id")
   async deleteCocktail(@Param("id") cocktailId: string) {
     this.cocktailService.deleteCocktailById(+cocktailId);
+  }
+
+  @Patch(":id")
+  async patchCocktail(
+    @Param("id") cocktailId: string,
+    @Body() cocktailPatchDTO: CocktailPatchDTO,
+  ) {
+    return this.cocktailService.patchCocktail(+cocktailId, cocktailPatchDTO);
   }
 }
