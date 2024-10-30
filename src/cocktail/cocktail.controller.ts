@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -39,5 +40,10 @@ export class CocktailController {
     res.setHeader("Location", `/cocktail/${createdCocktail.id}`);
 
     return res.status(201).send();
+  }
+
+  @Delete(":id")
+  async deleteCocktail(@Param("id") cocktailId: string) {
+    this.cocktailService.deleteCocktailById(+cocktailId);
   }
 }
