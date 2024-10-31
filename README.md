@@ -58,7 +58,7 @@ cd solvro-recruitment-task-backend
 pnpm install
 ```
 3. Set up the database:
-	- Create `.env` file and set `DATABASE_URL` field
+	- Create `.env` file and set `DATABASE_URL` variable
 	- Run `pnpm db:restart`
 4. Start the development server:
 ```bash
@@ -84,8 +84,7 @@ Ingredients:
 - DELETE /ingredients/:id -> Delete a specific ingredient by ID
 
 ### Running Tests
-1. Create `.env.test.local` file
-2. set `DATABASE_URL` field
+1. Create `.env.test.local` file and set `DATABASE_URL` variable
 3. Initialize/Restart test database:
 ``` bash
 pnpm run db:test:restart
