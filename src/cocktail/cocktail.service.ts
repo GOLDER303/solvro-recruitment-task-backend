@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { CocktailDTO } from "src/cocktail/dtos/cocktail.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CocktailCreateDTO } from "./dtos/cocktail-create.dto";
@@ -55,6 +55,12 @@ export class CocktailService {
         },
       },
     });
+
+    if (!cocktail) {
+      throw new NotFoundException(
+        `Cocktail with id ${cocktailId} does not exist`,
+      );
+    }
 
     const cocktailDTO: CocktailDTO = {
       ...cocktail,
@@ -130,12 +136,14 @@ export class CocktailService {
       where: { id: cocktailId },
       data: {
         ...cocktailUpdates,
-        ingredients: {
-          create: ingredients.map(({ ingredientId, quantity }) => ({
-            ingredient: { connect: { id: ingredientId } },
-            quantity,
-          })),
-        },
+        ingredients: ingredients
+          ? {
+              create: ingredients.map(({ ingredientId, quantity }) => ({
+                ingredient: { connect: { id: ingredientId } },
+                quantity,
+              })),
+            }
+          : undefined,
       },
       include: {
         ingredients: {
@@ -152,6 +160,12 @@ export class CocktailService {
         },
       },
     });
+
+    if (!patchedCocktail) {
+      throw new NotFoundException(
+        `Cocktail with id ${cocktailId} does not exist`,
+      );
+    }
 
     const patchedCocktailDTO: CocktailDTO = {
       ...patchedCocktail,

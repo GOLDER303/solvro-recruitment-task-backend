@@ -12,7 +12,7 @@ export class IngredientService {
   }
 
   async getIngredientById(ingredientId: number): Promise<IngredientDTO> {
-    return await this.prisma.ingredient.findUnique({
+    return await this.prisma.ingredient.findUniqueOrThrow({
       where: { id: ingredientId },
     });
   }
