@@ -18,8 +18,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test:int": "jest -i --no-cache --watch --config jest-int.json",
-    "db:restart": "pnpm prisma migrate reset && sleep 2"
+    "test:int": "pnpm dotenv -e .env.test.local -- jest -i --no-cache --watch --config jest-int.json",
+    "db:restart": "pnpm prisma migrate reset && sleep 2",
+    "db:test:restart": "pnpm dotenv -e .env.test.local -- pnpm prisma migrate reset && sleep 2"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
