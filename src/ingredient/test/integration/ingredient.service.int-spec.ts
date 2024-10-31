@@ -1,4 +1,6 @@
 import { Test } from "@nestjs/testing";
+import { IngredientCreateDTO } from "src/ingredient/dto/ingredient-create.dto ";
+import { IngredientPatchDTO } from "src/ingredient/dto/ingredient-patch.dto";
 import { IngredientModule } from "src/ingredient/ingredient.module";
 import { IngredientService } from "src/ingredient/ingredient.service";
 import { PrismaModule } from "src/prisma/prisma.module";

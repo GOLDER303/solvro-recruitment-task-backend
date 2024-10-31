@@ -1,4 +1,4 @@
-type IngredientCreateDTO = {
+export type IngredientCreateDTO = {
   name: string;
   description: string;
   isAlcoholString: string;

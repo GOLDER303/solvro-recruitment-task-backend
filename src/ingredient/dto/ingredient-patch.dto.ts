@@ -1,4 +1,4 @@
-type IngredientPatchDTO = {
+export type IngredientPatchDTO = {
   name?: string;
   description?: string;
   isAlcohol?: boolean;

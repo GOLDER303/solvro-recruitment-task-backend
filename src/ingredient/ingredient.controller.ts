@@ -15,7 +15,9 @@ import {
 import { FileInterceptor } from "@nestjs/platform-express";
 import { Response } from "express";
 import { multerOptions } from "src/config/multer-options";
+import { IngredientCreateDTO } from "./dto/ingredient-create.dto ";
 import { IngredientService } from "./ingredient.service";
+import { IngredientPatchDTO } from "./dto/ingredient-patch.dto";
 
 @Controller("ingredient")
 export class IngredientController {
