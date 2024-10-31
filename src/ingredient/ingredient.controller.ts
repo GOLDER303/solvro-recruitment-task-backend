@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Res,
   UploadedFile,
   UseInterceptors,
@@ -16,16 +17,17 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { Response } from "express";
 import { multerOptions } from "src/config/multer-options";
 import { IngredientCreateDTO } from "./dto/ingredient-create.dto ";
-import { IngredientService } from "./ingredient.service";
 import { IngredientPatchDTO } from "./dto/ingredient-patch.dto";
+import { IngredientQueryDTO } from "./dto/ingredient-query.dto";
+import { IngredientService } from "./ingredient.service";
 
 @Controller("ingredient")
 export class IngredientController {
   constructor(private readonly ingredientService: IngredientService) {}
 
   @Get()
-  async getAllIngredient() {
-    return this.ingredientService.getAllIngredients();
+  async getAllIngredient(@Query() ingredientQueryDTO: IngredientQueryDTO) {
+    return this.ingredientService.getAllIngredients(ingredientQueryDTO);
   }
 
   @Get(":id")
