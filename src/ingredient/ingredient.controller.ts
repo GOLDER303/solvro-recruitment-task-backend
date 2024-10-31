@@ -21,7 +21,7 @@ import { IngredientPatchDTO } from "./dto/ingredient-patch.dto";
 import { IngredientQueryDTO } from "./dto/ingredient-query.dto";
 import { IngredientService } from "./ingredient.service";
 
-@Controller("ingredient")
+@Controller("ingredients")
 export class IngredientController {
   constructor(private readonly ingredientService: IngredientService) {}
 

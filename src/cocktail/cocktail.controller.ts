@@ -18,7 +18,7 @@ import { CocktailCreateDTO } from "./dtos/cocktail-create.dto";
 import { CocktailPatchDTO } from "./dtos/cocktail-patch.dto";
 import { CocktailQueryDTO } from "./dtos/cocktail-query.dto";
 
-@Controller("cocktail")
+@Controller("cocktails")
 export class CocktailController {
   constructor(private readonly cocktailService: CocktailService) {}
 
