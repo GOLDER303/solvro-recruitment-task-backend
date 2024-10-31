@@ -46,7 +46,7 @@ export class CocktailController {
 
   @Delete(":id")
   async deleteCocktail(@Param("id") cocktailId: string) {
-    this.cocktailService.deleteCocktailById(+cocktailId);
+    await this.cocktailService.deleteCocktailById(+cocktailId);
   }
 
   @Patch(":id")
