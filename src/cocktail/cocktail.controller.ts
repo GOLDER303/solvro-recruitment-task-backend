@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Res,
   UseInterceptors,
 } from "@nestjs/common";
@@ -15,14 +16,15 @@ import { multerOptions } from "src/config/multer-options";
 import { CocktailService } from "./cocktail.service";
 import { CocktailCreateDTO } from "./dtos/cocktail-create.dto";
 import { CocktailPatchDTO } from "./dtos/cocktail-patch.dto";
+import { CocktailQueryDTO } from "./dtos/cocktail-query.dto";
 
 @Controller("cocktail")
 export class CocktailController {
   constructor(private readonly cocktailService: CocktailService) {}
 
   @Get()
-  async getAllCocktail() {
-    return this.cocktailService.getAllCocktails();
+  async getAllCocktail(@Query() cocktailQueryDTO: CocktailQueryDTO) {
+    return this.cocktailService.getAllCocktails(cocktailQueryDTO);
   }
 
   @Get(":id")

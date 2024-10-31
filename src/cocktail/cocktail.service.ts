@@ -3,12 +3,45 @@ import { CocktailDTO } from "src/cocktail/dtos/cocktail.dto";
 import { PrismaService } from "src/prisma/prisma.service";
 import { CocktailCreateDTO } from "./dtos/cocktail-create.dto";
 import { CocktailPatchDTO } from "./dtos/cocktail-patch.dto";
+import { CocktailQueryDTO } from "./dtos/cocktail-query.dto";
 
 @Injectable()
 export class CocktailService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getAllCocktails(): Promise<CocktailDTO[]> {
+  async getAllCocktails(
+    cocktailQueryDTO?: CocktailQueryDTO,
+  ): Promise<CocktailDTO[]> {
+    const where: any = {
+      ...(cocktailQueryDTO.category && {
+        category: cocktailQueryDTO.category,
+      }),
+      ...(cocktailQueryDTO.hasAlcohol !== undefined && {
+        ingredients:
+          cocktailQueryDTO.hasAlcohol === "true"
+            ? {
+                some: {
+                  ingredient: {
+                    isAlcohol: true,
+                  },
+                },
+              }
+            : {
+                none: {
+                  ingredient: {
+                    isAlcohol: true,
+                  },
+                },
+              },
+      }),
+    };
+
+    const orderBy: any = {};
+    if (cocktailQueryDTO.sortBy) {
+      orderBy[cocktailQueryDTO.sortBy] =
+        cocktailQueryDTO.order === "desc" ? "desc" : "asc";
+    }
+
     const cocktails = await this.prisma.cocktail.findMany({
       include: {
         ingredients: {
@@ -24,6 +57,8 @@ export class CocktailService {
           },
         },
       },
+      where,
+      orderBy,
     });
 
     const cocktailsDTOs: CocktailDTO[] = cocktails.map((cocktail) => ({
