@@ -10,7 +10,7 @@ export class CocktailService {
   constructor(private readonly prisma: PrismaService) {}
 
   async getAllCocktails(
-    cocktailQueryDTO?: CocktailQueryDTO,
+    cocktailQueryDTO: CocktailQueryDTO = {},
   ): Promise<CocktailDTO[]> {
     const where: any = {
       ...(cocktailQueryDTO.category && {
